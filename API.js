@@ -19,6 +19,7 @@ module.exports={
 	    			{
 	    				"type":key,
 	    				"affliction":affliction,
+	    				"name": affliction,
 	    				"date":n,
 	    				"views":0,
 	    				"description":affliction,
