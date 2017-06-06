@@ -86,7 +86,7 @@ def region_lat_long_sort(row):
     loc_data={}
     if row["Name"] not in region_loc_dict.keys():
         req_loc=row["Name"].replace(" ","+")
-        req=requests.get("https://maps.googleapis.com/maps/api/geocode/json?address="+req_loc+"+,+Nepal"+"&key=AIzaSyAOTrmHFjUxiO8JUs8gqZReTxjFJ1W-9TY")        
+        req=requests.get("https://maps.googleapis.com/maps/api/geocode/json?address="+req_loc+"+,+Nepal"+"&key=AIzaSyBRUomBHcNNVN6Zb219Ty1eDkDlNQXzsIE")        
         loc_data=req.json()['results'][0]['geometry']['location']
         region_loc_dict[row["Name"]] = loc_data
 
