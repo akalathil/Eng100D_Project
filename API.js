@@ -9,6 +9,8 @@ module.exports={
 	  	res.json(response);
 	},
 	listall: function(req,res){
+		var d=new Date();
+		var n=d.getTime();
 		response=[];
 		for (key in data){
 			for (affliction in data[key]){
@@ -16,7 +18,10 @@ module.exports={
 	    		response.push(
 	    			{
 	    				"type":key,
-	    				"affliction":affliction
+	    				"affliction":affliction,
+	    				"date":n,
+	    				"description":affliction,
+	    				"tag":[]
 	    			}
 	    		);
 			}
