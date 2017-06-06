@@ -23,7 +23,7 @@ module.exports={
 	    				"date":n,
 	    				"views":0,
 	    				"description":affliction,
-	    				"tag":[]
+	    				"tags":[]
 	    			}
 	    		);
 			}
