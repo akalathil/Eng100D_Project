@@ -20,6 +20,7 @@ module.exports={
 	    				"type":key,
 	    				"affliction":affliction,
 	    				"date":n,
+	    				"views":0,
 	    				"description":affliction,
 	    				"tag":[]
 	    			}
