@@ -8,6 +8,22 @@ module.exports={
 	  	}
 	  	res.json(response);
 	},
+	listall: function(req,res){
+		response=[];
+		for (key in data){
+			for (affliction in data[key]){
+				//console.log(key);
+	    		response.push(
+	    			{
+	    				"type":key,
+	    				"affliction":affliction
+	    			}
+	    		);
+			}
+	    	
+	  	}
+	  	res.json(response);
+	},
 	listAffliction: function(req,res){
 		var type=String(req.params.type);
 		response=[];

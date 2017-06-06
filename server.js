@@ -9,6 +9,7 @@ app.use(function(req,res,next){
   next();
 });
 app.get('/list', api.root);
+app.get('/list/all',api.listall);
 app.get('/list/:type',api.listAffliction);
 app.get('/list/:type/:affliction',api.listAfflictionDistrict);
 app.get('/info/:type/:affliction/:district',api.getInfo);

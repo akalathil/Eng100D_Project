@@ -2,6 +2,10 @@ List out types of affliction
 https://eng100d-project.herokuapp.com/list
   >>["disease", "injury", "mental_health", "nutrition", "oral_eye_health", "water"]
 
+List all afflictions
+https://eng100d-project.herokuapp.com/list/all
+  >>[{ "type": "disease", "affliction": "STD/STI" },...]
+
 List out afflictions with underneath type of affliction
 https://eng100d-project.herokuapp.com/list/{type of affliction}
 
