@@ -86,7 +86,7 @@ def region_lat_long_sort(row):
     loc_data={}
     if row["Name"] not in region_loc_dict.keys():
         req_loc=row["Name"].replace(" ","+")
-        req=requests.get("https://maps.googleapis.com/maps/api/geocode/json?address="+req_loc+"&key=AIzaSyAOTrmHFjUxiO8JUs8gqZReTxjFJ1W-9TY")
+        req=requests.get("https://maps.googleapis.com/maps/api/geocode/json?address="+req_loc+"+,+Nepal"+"&key=AIzaSyAOTrmHFjUxiO8JUs8gqZReTxjFJ1W-9TY")        
         loc_data=req.json()['results'][0]['geometry']['location']
         region_loc_dict[row["Name"]] = loc_data
 
@@ -132,8 +132,9 @@ def add_tuberculosis(row, file_name):
         #tempDict["Data"] = df_tuberculosis.loc(df_tuberculosis["Sub-Indicator1"] == "Total")
         disease_region_dict["Tuberculosis"] = tDict
 df_tuberculosis[["Name", "Year", "Sub-Indicator1", "Value"]].apply(lambda x: add_tuberculosis(x, "Tuberculosis_Health_Data(2012-13).csv"), axis=1)
-disease_region_dict["Tuberculosis"]["Data"] = df_tuberculosis.loc[df_tuberculosis["Sub-Indicator1"] == "Total"]
-
+dft = df_tuberculosis.loc[df_tuberculosis["Sub-Indicator1"] == "Total"]
+disease_region_dict["Tuberculosis"]["Data"] = {"cols": list(dft.columns.values)}
+disease_region_dict["Tuberculosis"]["Data"]["rows"] = dft.to_json(orient="records")
 #Adding Malaria Data to Disease Dict
 mDict = {}
 def add_malaria(row, file_name):
@@ -152,8 +153,9 @@ def add_malaria(row, file_name):
             mDict[row["Name"]] = {"info": info_dict}
             disease_region_dict['Malaria'] = mDict
 df_malaria[["Name", "Year", "Sub-Indicator1", "Sub-Indicator2", "Value"]].apply(lambda x: add_malaria(x, "Malaria_Health_Data(2013-14).csv"), axis=1)
-disease_region_dict["Malaria"]["Data"] = df_malaria.loc[df_malaria["Sub-Indicator1"] == "Total"]
-
+dfma = df_tuberculosis.loc[df_malaria["Sub-Indicator1"] == "Total"]
+disease_region_dict["Malaria"]["Data"] = {"cols": list(dfma.columns.values)}
+disease_region_dict["Malaria"]["Data"]["rows"] = dfma.to_json(orient="records")
 #Adding Mental Health Data
 mental_health_region_dict = {}
 def mental_region_sort(row, file_name):
@@ -289,7 +291,12 @@ water_dict
 import json
 
 web_dict = {
-   "disease"   : disease_region_dict,
+   "disease"         : disease_region_dict,
+   "injury"          : injury_region_dict,
+   "mental_health"   : mental_health_region_dict,
+   "nutrition"       : nutrition_region_dict, 
+   "oral_eye_health" : oral_eye_disease_dict, 
+   "water"           : water_dict
 }
 
 
