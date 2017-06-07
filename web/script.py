@@ -86,7 +86,7 @@ def region_lat_long_sort(row):
     loc_data={}
     if row["Name"] not in region_loc_dict.keys():
         req_loc=row["Name"].replace(" ","+")
-        req=requests.get("https://maps.googleapis.com/maps/api/geocode/json?address="+req_loc+"+,+Nepal"+"&key=AIzaSyBRUomBHcNNVN6Zb219Ty1eDkDlNQXzsIE")        
+        req=requests.get("https://maps.googleapis.com/maps/api/geocode/json?address="+req_loc+"+,+Nepal"+"&key=AIzaSyB2G0h2XN0zJYXSUtHkWmqNq0G_MMFO1-o")        
         loc_data=req.json()['results'][0]['geometry']['location']
         region_loc_dict[row["Name"]] = loc_data
 
@@ -216,17 +216,6 @@ dfn = df_nutrition.loc[df_nutrition["Indicator"] == "Weighing Status according t
 
 #Adding Water Sanitation Data
 water_dict = {}
-def water_region_sort(row, file_name): 
-    info_dict ={}
-    region_lat_long_sort(row)
-    info_dict["Latitude"] = (region_loc_dict.get(row['Name'])).get('lat')
-    info_dict["Longitude"] = (region_loc_dict.get(row['Name'])).get('lng')
-    info_dict["Value"] = row["Value"]
-    info_dict["Year"] = "2011"
-    info_dict["File Name"] = file_name
-    t_dict = {"info": info_dict}
-    water_dict[row["Name"]] = {row["Name"]: t_dict}
-df_water[["Name", "Value"]].apply(lambda x: water_region_sort(x, "Water_Sanitation(2011).csv"), axis=1)
 
 #Inserting Data Json Value
 def add_data_disease(indicator):
@@ -266,10 +255,9 @@ def add_data_nutrition(row):
 dfn[["Sub-Indicator1", "Sub-Indicator2"]].apply(lambda x: add_data_nutrition(x), axis=1)
 
 def add_water_data(name):
-    tempDict = water_dict[name]
-    df = (df_water.loc[df_water['Name'] == name])
-    tempDict["Data"] = {"cols": list(df_water.columns.values)}
-    tempDict["Data"]["rows"] = df.to_json(orient="records")
+    tempDict = {"cols": list(df_water.columns.values)}
+    water_dict["Water Sanitation"] = {"Data": tempDict}
+    water_dict["Water Sanitation"]["Data"]["rows"] = df_water.to_json(orient="records")
 df_water["Name"].apply(lambda x: add_water_data(x))
 
 disease_region_dict
