@@ -255,8 +255,9 @@ def add_data_nutrition(row):
 dfn[["Sub-Indicator1", "Sub-Indicator2"]].apply(lambda x: add_data_nutrition(x), axis=1)
 
 def add_water_data(name):
-    water_dict["Water Sanitation"] = {"cols": list(df_water.columns.values)}
-    water_dict["Water Sanitation"]["rows"] = df_water.to_json(orient="records")
+    tempDict = {"cols": list(df_water.columns.values)}
+    water_dict["Water Sanitation"] = {"Data": tempDict}
+    water_dict["Water Sanitation"]["Data"]["rows"] = df_water.to_json(orient="records")
 df_water["Name"].apply(lambda x: add_water_data(x))
 
 disease_region_dict
