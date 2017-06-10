@@ -16,6 +16,8 @@ df_water = pd.read_csv("../python/Water_Sanitation(2011).csv")
 #test=requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=Achham&key=AIzaSyAOTrmHFjUxiO8JUs8gqZReTxjFJ1W-9TY")
 #print(test.json()['results'][0]['geometry']['location'])
 
+# In[92]:
+
 ################################
 # Drop unneeded attributes #
 ################################
@@ -77,6 +79,10 @@ df_water.columns = ["Name", "Indicator", "Value"]
 df_tuberculosis = df_tuberculosis.dropna()
 df_mental_health.ix[df_mental_health["Sub-Indicator"] == "Dipression", "Sub-Indicator"] = "Depression"
 df_water = df_water[df_water["Indicator"] == "Sanitation Coverage (%"]
+df_water.ix[df_water["Indicator"] == "Sanitation Coverage (%", "Indicator"] = "Sanitation Coverage (%)"
+
+
+# In[93]:
 
 region_loc_dict ={}
 disease_region_dict = {}
@@ -86,207 +92,258 @@ def region_lat_long_sort(row):
     loc_data={}
     if row["Name"] not in region_loc_dict.keys():
         req_loc=row["Name"].replace(" ","+")
-        req=requests.get("https://maps.googleapis.com/maps/api/geocode/json?address="+req_loc+"+,+Nepal"+"&key=AIzaSyB2G0h2XN0zJYXSUtHkWmqNq0G_MMFO1-o")        
+        req=requests.get("https://maps.googleapis.com/maps/api/geocode/json?address="+req_loc+"+,+Nepal"+"&key=AIzaSyDc8yRHl7AHRKdNK9_RJdg8Ndb56vQ5XnQ")        
         loc_data=req.json()['results'][0]['geometry']['location']
         region_loc_dict[row["Name"]] = loc_data
 
 def region_sort(row, c_disease_region_dict, file_name):
-    info_dict = {}
     region_lat_long_sort(row)
-    if row["Indicator"] in c_disease_region_dict.keys(): 
-        tempDict = c_disease_region_dict[row["Indicator"]]
-        info_dict["Latitude"] = (region_loc_dict.get(row['Name'])).get('lat')
-        info_dict["Longitude"] = (region_loc_dict.get(row['Name'])).get('lng')
-        info_dict["Value"] = row["Value"]
-        info_dict["Year"] = row["Year"]
-        info_dict["File Name"] = file_name
-        tempDict[row["Name"]] = {"info": info_dict}
-        
-        c_disease_region_dict[row["Indicator"]] = tempDict
-        
-    else: 
-        info_dict["Latitude"] = (region_loc_dict.get(row['Name'])).get('lat')
-        info_dict["Longitude"] = (region_loc_dict.get(row['Name'])).get('lng')
-        info_dict["Value"] = row["Value"]
-        info_dict["Year"] = row["Year"]
-        info_dict["File Name"] = file_name
-        t_dict = {"info": file_name}
-        c_disease_region_dict[row["Indicator"]] = {row["Name"]: t_dict}
-    return c_disease_region_dict
 
 df_communicable_diseases[["Name", "Year", "Indicator","Value"]].apply(lambda x: region_sort(x, disease_region_dict, "communicable_and infectious_diseases_(2011-14).csv"), axis=1)
 df_injuries[["Name", "Year", "Indicator","Value"]].apply(lambda x: region_sort(x, injury_region_dict, "injury_data(2011-14).csv"), axis=1)
 df_oral_eye[["Name","Year", "Indicator","Value"]].apply(lambda x: region_sort(x, oral_eye_disease_dict, "Oral_Eye_Health_Data(2011-14).csv"), axis=1)
 
-#Adding Tuberculosis Data to Disease Dict
-tDict = {}
-def add_tuberculosis(row, file_name):
-    info_dict = {}
-    if row["Sub-Indicator1"] == "Total":
-        info_dict["Latitude"] = (region_loc_dict.get(row['Name'])).get('lat')
-        info_dict["Longitude"] = (region_loc_dict.get(row['Name'])).get('lng')
-        info_dict["Value"] = row["Value"]
-        info_dict["Year"] = row["Year"]
-        info_dict["File Name"] = file_name
-        tDict[row["Name"]] = {"info": info_dict}
-        #tempDict["Data"] = df_tuberculosis.loc(df_tuberculosis["Sub-Indicator1"] == "Total")
-        disease_region_dict["Tuberculosis"] = tDict
-df_tuberculosis[["Name", "Year", "Sub-Indicator1", "Value"]].apply(lambda x: add_tuberculosis(x, "Tuberculosis_Health_Data(2012-13).csv"), axis=1)
-dft = df_tuberculosis.loc[df_tuberculosis["Sub-Indicator1"] == "Total"]
-disease_region_dict["Tuberculosis"]["Data"] = {"cols": list(dft.columns.values)}
-disease_region_dict["Tuberculosis"]["Data"]["rows"] = dft.to_json(orient="records")
-#Adding Malaria Data to Disease Dict
-mDict = {}
-def add_malaria(row, file_name):
-    info_dict = {}
-    total = 0
-    if (row["Sub-Indicator1"] == "Total"):
-        if (row["Sub-Indicator2"] == "Female"):
-            total = row["Value"]
-        else:
-            total = total + row["Value"]
-            info_dict["Latitude"] = (region_loc_dict.get(row['Name'])).get('lat')
-            info_dict["Longitude"] = (region_loc_dict.get(row['Name'])).get('lng')
-            info_dict["Value"] = total
-            info_dict["Year"] = row["Year"]
-            info_dict["File Name"] = file_name
-            mDict[row["Name"]] = {"info": info_dict}
-            disease_region_dict['Malaria'] = mDict
-df_malaria[["Name", "Year", "Sub-Indicator1", "Sub-Indicator2", "Value"]].apply(lambda x: add_malaria(x, "Malaria_Health_Data(2013-14).csv"), axis=1)
-dfma = df_tuberculosis.loc[df_malaria["Sub-Indicator1"] == "Total"]
-disease_region_dict["Malaria"]["Data"] = {"cols": list(dfma.columns.values)}
-disease_region_dict["Malaria"]["Data"]["rows"] = dfma.to_json(orient="records")
+
+# In[94]:
+
 #Adding Mental Health Data
 mental_health_region_dict = {}
 def mental_region_sort(row, file_name):
-    info_dict = {}
     region_lat_long_sort(row)
-    if (row["Indicator"] == "Mental Health related problems"):
-        if row["Sub-Indicator"] in mental_health_region_dict.keys(): 
-            tempDict = mental_health_region_dict[row["Sub-Indicator"]]
-            info_dict["Latitude"] = (region_loc_dict.get(row['Name'])).get('lat')
-            info_dict["Longitude"] = (region_loc_dict.get(row['Name'])).get('lng')
-            info_dict["Value"] = row["Value"]
-            info_dict["Year"] = row["Year"]
-            info_dict["File Name"] = file_name
-            tempDict[row["Name"]] = {"info": info_dict}
-            mental_health_region_dict[row["Sub-Indicator"]] = tempDict
-        
-        else:
-            info_dict["Latitude"] = (region_loc_dict.get(row['Name'])).get('lat')
-            info_dict["Longitude"] = (region_loc_dict.get(row['Name'])).get('lng')
-            info_dict["Value"] = row["Value"]
-            info_dict["Year"] = row["Year"]
-            info_dict["File Name"] = file_name
-            t_dict = {"info": info_dict}
-            mental_health_region_dict[row["Sub-Indicator"]] = {row["Name"]: t_dict}
-        return mental_health_region_dict
 
 df_mental_health[["Name", "Year", "Indicator", "Sub-Indicator", "Value"]].apply(lambda x: mental_region_sort(x, "Mental_Health_Data(2011-14).csv"), axis=1) 
 df = df_mental_health.loc[df_mental_health["Indicator"] == "Mental Health related problems"]
 
+
+# In[95]:
+
 #Adding Nutrition Data
 nutrition_region_dict = {}
 def nutrition_region_sort(row, file_name): 
-    info_dict = {}
     region_lat_long_sort(row)
-    if (row["Indicator"] == "Weighing Status according to age group (Repeated Visit)"):
-        if (row["Sub-Indicator1"] + ", " + row["Sub-Indicator2"]) in nutrition_region_dict.keys(): 
-            tempDict = nutrition_region_dict[row["Sub-Indicator1"] + ", " + row["Sub-Indicator2"]]
-            info_dict["Latitude"] = (region_loc_dict.get(row['Name'])).get('lat')
-            info_dict["Longitude"] = (region_loc_dict.get(row['Name'])).get('lng')
-            info_dict["Value"] = row["Value"]
-            info_dict["Year"] = row["Year"]
-            info_dict["File Name"] = file_name
-            tempDict[row["Name"]] = {"info": info_dict}
-            nutrition_region_dict[row["Sub-Indicator1"] + ", " + row["Sub-Indicator2"]] = tempDict
-        
-        else: 
-            info_dict["Latitude"] = (region_loc_dict.get(row['Name'])).get('lat')
-            info_dict["Longitude"] = (region_loc_dict.get(row['Name'])).get('lng')
-            info_dict["Value"] = row["Value"]
-            info_dict["Year"] = row["Year"]
-            info_dict["File Name"] = file_name
-            t_dict = {"info": info_dict}
-            nutrition_region_dict[row["Sub-Indicator1"] + ", " + row["Sub-Indicator2"]] = {row["Name"]: t_dict}
-        return nutrition_region_dict
 
 df_nutrition[["Name", "Year", "Indicator", "Sub-Indicator1", "Sub-Indicator2", "Value"]].apply(lambda x: nutrition_region_sort(x, "Nutrition_Data(2011-14).csv"), axis=1)
 dfn = df_nutrition.loc[df_nutrition["Indicator"] == "Weighing Status according to age group (Repeated Visit)"]
 
+
+# In[96]:
+
 #Adding Water Sanitation Data
 water_dict = {}
 
-#Inserting Data Json Value
-def add_data_disease(indicator):
-    tempDict = disease_region_dict[indicator]
-    df = (df_communicable_diseases.loc[df_communicable_diseases['Indicator'] == indicator])
-    tempDict["Data"] = {"cols": list(df_communicable_diseases.columns.values)}
-    tempDict["Data"]["rows"] = df.to_json(orient="records")
-df_communicable_diseases["Indicator"].apply(lambda x: add_data_disease(x))
 
-def add_data_injury(indicator):
-    tempDict = injury_region_dict[indicator]
-    df = (df_injuries.loc[df_injuries['Indicator'] == indicator])
-    tempDict["Data"] = {"cols": list(df_injuries.columns.values)}
-    tempDict["Data"]["rows"] = df.to_json(orient="records")
-df_injuries["Indicator"].apply(lambda x: add_data_injury(x))
+# In[97]:
 
-def add_data_oral_eye(indicator):
-    tempDict = oral_eye_disease_dict[indicator]
-    df = (df_oral_eye.loc[df_oral_eye['Indicator'] == indicator])
-    tempDict["Data"] = {"cols": list(df_oral_eye.columns.values)}
-    tempDict["Data"]["rows"] = df.to_json(orient="records")
-df_oral_eye["Indicator"].apply(lambda x: add_data_oral_eye(x))
+def convert_list_to_dict(new_dict, old_list):
+    for dic1 in old_list:
+        value = dic1[list(dic1.keys())[0]]
+        new_dict[list(dic1.keys())[0]] = value
 
-def add_data_mental_health(indicator):
-    tempDict = mental_health_region_dict[indicator]
-    dfm = (df.loc[df['Sub-Indicator'] == indicator])
-    tempDict["Data"] = {"cols": list(df.columns.values)}
-    tempDict["Data"]["rows"] = dfm.to_json(orient="records")
-df["Sub-Indicator"].apply(lambda x: add_data_mental_health(x))
 
-def add_data_nutrition(row):
-    iD = (row["Sub-Indicator1"] + ", " + row["Sub-Indicator2"])
-    tempDict = nutrition_region_dict[iD]
-    df = (dfn.loc[(dfn['Sub-Indicator1'] + ", " + dfn['Sub-Indicator2'])  == (row["Sub-Indicator1"] + ", " + row["Sub-Indicator2"])])
-    tempDict["Data"] = {"cols": list(dfn.columns.values)}
-    tempDict["Data"]["rows"] = df.to_json(orient="records")
-dfn[["Sub-Indicator1", "Sub-Indicator2"]].apply(lambda x: add_data_nutrition(x), axis=1)
+# In[98]:
 
-def add_water_data(name):
-    tempDict = {"cols": list(df_water.columns.values)}
-    water_dict["Water Sanitation"] = {"Data": tempDict}
-    water_dict["Water Sanitation"]["Data"]["rows"] = df_water.to_json(orient="records")
-df_water["Name"].apply(lambda x: add_water_data(x))
+def demographic_indicators(dictionary):   
+    key       = list(dictionary.keys())[0]
+    frame     = dictionary[key]
+    
+    frame = frame.loc[frame["Year"] =="2013/14"]  
+    frame.is_copy = False
+    frame.reset_index(drop=True, inplace=True)
+    
+    districts  = frame["Name"]
+    latitudes  = districts.apply(lambda d: region_loc_dict[d]["lat"])
+    longitudes = districts.apply(lambda d: region_loc_dict[d]["lng"])
+    
+    frame["Latitude"]   = latitudes
+    frame["Longtitude"] = longitudes
+    
+    del frame["Indicator"]
+    headers       = frame.columns.values
+    frame.columns = ["0", "1", "2", "Latitude", "Longitude"]
+    
+    return {key : {"Data": {"cols": list(headers) ,"rows":frame.to_json(orient="records")}} }
+
+
+disease_frames          = df_communicable_diseases.groupby("Indicator")
+disease_frames          = [{c : disease_frames.get_group(c)} for c in disease_frames.groups]
+disease_region_list     = [demographic_indicators(d) for d in disease_frames]
+disease_dict = {}
+convert_list_to_dict(disease_dict, disease_region_list)
+
+injury_frames           = df_injuries.groupby("Indicator")
+injury_frames           = [{c : injury_frames.get_group(c)} for c in injury_frames.groups]
+injury_list             = [demographic_indicators(d) for d in injury_frames]
+injury_dict = {}
+convert_list_to_dict(injury_dict, injury_list)
+
+oral_eye_frames         = df_oral_eye.groupby("Indicator")
+oral_eye_frames         = [{c : oral_eye_frames.get_group(c)} for c in oral_eye_frames.groups]
+oral_eye_list           = [demographic_indicators(d) for d in oral_eye_frames]
+oral_eye_dict = {}
+convert_list_to_dict(oral_eye_dict, oral_eye_list)
+oral_eye_dict
+
+
+# In[99]:
+
+def mental_indicators(dictionary):   
+    key       = list(dictionary.keys())[0]
+    frame     = dictionary[key]
+    
+    frame = frame.loc[frame["Year"] =="2013/14"]  
+    frame.is_copy = False
+    frame.reset_index(drop=True, inplace=True)
+    
+    districts  = frame["Name"]
+    latitudes  = districts.apply(lambda d: region_loc_dict[d]["lat"])
+    longitudes = districts.apply(lambda d: region_loc_dict[d]["lng"])
+    
+    frame["Latitude"]   = latitudes
+    frame["Longtitude"] = longitudes
+    
+    del frame["Indicator"]
+    del frame["Sub-Indicator"]
+    headers       = frame.columns.values
+    frame.columns = ["0", "1", "2", "Latitude", "Longitude"]
+    
+    return {key : {"Data": {"cols": list(headers) ,"rows":frame.to_json(orient="records")}}}
+
+mental_frames           = df_mental_health.groupby("Sub-Indicator")
+mental_frames           = [{c : mental_frames.get_group(c)} for c in mental_frames.groups]
+mental_list             = [mental_indicators(d) for d in mental_frames]
+mental_dict = {}
+convert_list_to_dict(mental_dict, mental_list)
+mental_dict
+
+
+# In[100]:
+
+def nutrition_indicators(d1, d2):   
+    outer_key  = list(d1.keys())[0]
+    inner_key  = list(d2.keys())[0]
+    key        = outer_key + inner_key
+    
+    frame = d1[outer_key]
+    frame = frame.loc[frame["Year"] =="2013/14"]  
+    frame.is_copy = False
+    frame.reset_index(drop=True, inplace=True)
+    
+    districts  = frame["Name"]
+    latitudes  = districts.apply(lambda d: region_loc_dict[d]["lat"])
+    longitudes = districts.apply(lambda d: region_loc_dict[d]["lng"])
+    
+    frame["Latitude"]   = latitudes
+    frame["Longtitude"] = longitudes
+    
+    weight_frame = frame[frame["Sub-Indicator2"] == inner_key]
+    weight_frame.is_copy = False
+    weight_frame.reset_index(drop=True, inplace=True)
+    
+    del weight_frame["Indicator"]
+    del weight_frame["Sub-Indicator1"]
+    del weight_frame["Sub-Indicator2"]
+    
+    headers              = weight_frame.columns.values
+    weight_frame.columns = ["0", "1", "2", "Latitude", "Longitude"]
+    
+    weight_map = { key : {"cols": list(headers), "rows": weight_frame.to_json(orient="records")} }
+    
+    return weight_map
+
+nutrition_frames1           = dfn.groupby("Sub-Indicator1")
+nutrition_frames2           = dfn.groupby("Sub-Indicator2")
+nutrition_frames1           = [{c : nutrition_frames1.get_group(c)} for c in nutrition_frames1.groups]
+nutrition_frames2           = [{c : nutrition_frames2.get_group(c)} for c in nutrition_frames2.groups]
+nutrition_frames            = zip(nutrition_frames1, nutrition_frames2)
+nutrition_list              = [nutrition_indicators(d,y) for d in nutrition_frames1 for y in nutrition_frames2]
+nutrition_dict = {}
+convert_list_to_dict(nutrition_dict, nutrition_list)
+nutrition_dict
+
+
+# In[101]:
+
+def water_indicators(dictionary):   
+    key       = list(dictionary.keys())[0]
+    frame     = dictionary[key]
+
+    frame.is_copy = False
+    frame.reset_index(drop=True, inplace=True)
+    loc_dict = {k.strip(' '): v for k, v in region_loc_dict.items()}
+
+    districts  = frame["Name"]
+    latitudes  = districts.apply(lambda d: loc_dict[d]["lat"])
+    longitudes = districts.apply(lambda d: loc_dict[d]["lng"])
+    
+    frame["Latitude"]   = latitudes
+    frame["Longtitude"] = longitudes
+    
+    del frame["Indicator"]
+    headers       = frame.columns.values
+    frame.columns = ["0", "1", "Latitude", "Longitude"]
+    
+    return {key : {"cols": list(headers) ,"rows":frame.to_json(orient="records")} }
+
+df_water[["Name", "Indicator"]].apply(lambda x: region_lat_long_sort(x), axis=1)
+water_frames           = df_water.groupby("Indicator")
+water_frames           = [{c : water_frames.get_group(c)} for c in water_frames.groups]
+water_list             = [water_indicators(d) for d in water_frames]
+water_dict = {}
+convert_list_to_dict(water_dict, water_list)
+water_dict
+
+
+# In[102]:
 
 disease_region_dict
 
+
+# In[103]:
+
 injury_region_dict
+
+
+# In[104]:
 
 mental_health_region_dict
 
+
+# In[105]:
+
 nutrition_region_dict
 
-region_loc_dict
+
+# In[106]:
+
+len(region_loc_dict)
+
+
+# In[107]:
 
 oral_eye_disease_dict
+
+
+# In[108]:
 
 water_dict
 
 
-# =================================================== NODE JS SETUP ====================================================================
+# In[109]:
+
 import json
-
-web_dict = {
-   "disease"         : disease_region_dict,
-   "injury"          : injury_region_dict,
-   "mental_health"   : mental_health_region_dict,
-   "nutrition"       : nutrition_region_dict, 
-   "oral_eye_health" : oral_eye_disease_dict, 
-   "water"           : water_dict
+web_dict  = {
+  "disease"         : disease_region_dict,
+  "injury"          : injury_region_dict,
+  "mental_health"   : mental_dict,
+  "nutrition"       : nutrition_dict, 
+  "oral_eye_health" : oral_eye_dict, 
+  "water"           : water_dict  
 }
+with open ('data.json', 'w') as fp:
+    json.dump(web_dict,fp)
 
 
-with open('data.json', 'w') as fp:
-    json.dump(web_dict, fp)
+# In[ ]:
+
+
+
