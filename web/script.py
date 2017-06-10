@@ -208,7 +208,7 @@ def mental_indicators(dictionary):
     
     return {key : {"Data": {"cols": list(headers) ,"rows":frame.to_json(orient="records")}}}
 
-mental_frames           = df_mental_health.groupby("Sub-Indicator")
+mental_frames           = df.groupby("Sub-Indicator")
 mental_frames           = [{c : mental_frames.get_group(c)} for c in mental_frames.groups]
 mental_list             = [mental_indicators(d) for d in mental_frames]
 mental_dict = {}
@@ -332,8 +332,8 @@ water_dict
 
 import json
 web_dict  = {
-  "disease"         : disease_region_dict,
-  "injury"          : injury_region_dict,
+  "disease"         : disease_dict,
+  "injury"          : injury_dict,
   "mental_health"   : mental_dict,
   "nutrition"       : nutrition_dict, 
   "oral_eye_health" : oral_eye_dict, 
