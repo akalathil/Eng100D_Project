@@ -155,7 +155,7 @@ def demographic_indicators(dictionary):
     longitudes = districts.apply(lambda d: region_loc_dict[d]["lng"])
     
     frame["Latitude"]   = latitudes
-    frame["Longtitude"] = longitudes
+    frame["Longitude"] = longitudes
     
     del frame["Indicator"]
     headers       = frame.columns.values
@@ -199,7 +199,7 @@ def mental_indicators(dictionary):
     longitudes = districts.apply(lambda d: region_loc_dict[d]["lng"])
     
     frame["Latitude"]   = latitudes
-    frame["Longtitude"] = longitudes
+    frame["Longitude"] = longitudes
     
     del frame["Indicator"]
     del frame["Sub-Indicator"]
@@ -233,7 +233,7 @@ def nutrition_indicators(d1, d2):
     longitudes = districts.apply(lambda d: region_loc_dict[d]["lng"])
     
     frame["Latitude"]   = latitudes
-    frame["Longtitude"] = longitudes
+    frame["Longitude"] = longitudes
     
     weight_frame = frame[frame["Sub-Indicator2"] == inner_key]
     weight_frame.is_copy = False
@@ -276,7 +276,7 @@ def water_indicators(dictionary):
     longitudes = districts.apply(lambda d: loc_dict[d]["lng"])
     
     frame["Latitude"]   = latitudes
-    frame["Longtitude"] = longitudes
+    frame["Longitude"] = longitudes
     
     del frame["Indicator"]
     headers       = frame.columns.values
