@@ -180,7 +180,7 @@ module.exports={
 		temp={
 			"Data":{
 				"cols":[],
-				"rows":[]
+				"rows":JSON.stringify([])
 			},
 			"info": {
 			    "name": req.body.name,
