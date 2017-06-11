@@ -9,7 +9,8 @@ module.exports={
 		        "name":affliction,
 		        "date":n,
 		        "views":0,
-		        "description":affliction
+		        "description":affliction,
+		        "source":"OpenNepal"
 		      };
 		    }
 	  	};
@@ -131,7 +132,8 @@ module.exports={
 			"name":"X",
 			"date":Y,
 			"views":Z,
-			"description":"new description"
+			"description":"new description",
+			"source":"source"
 		}
 		*/
 		var type= String(req.params.type);
@@ -140,7 +142,8 @@ module.exports={
 			"name":req.body.name,
 			"date":req.body.date,
 			"views":req.body.views,
-			"description":req.body.description
+			"description":req.body.description,
+			"source":req.body.source
 		};
 		res.json(data[type][affliction]["info"]);
 	},
@@ -171,7 +174,8 @@ module.exports={
 		/*
 		{
 		    "name": Name,
-		    "description": description
+		    "description": description,
+		    "source": Source
 		}
 		*/
 		var d=new Date();
@@ -186,7 +190,8 @@ module.exports={
 			    "name": req.body.name,
 			    "date": n,
 			    "views": 0,
-			    "description": req.body.description
+			    "description": req.body.description,
+			    "source":req.body.source
 			}	
 		};
 		data[type][req.body.name]=temp;
