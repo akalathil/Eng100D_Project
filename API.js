@@ -42,7 +42,8 @@ module.exports={
 	    				"name":temp["name"],
 	    				"date":temp["date"],
 	    				"views":temp["views"],
-	    				"description":temp["description"]
+	    				"description":temp["description"],
+	    				"source":temp["source"]
 	    			}
 	    		);
 			}
