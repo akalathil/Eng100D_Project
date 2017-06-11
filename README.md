@@ -77,7 +77,8 @@ NOTE: Replace "/" with %2F
     "name": "HIV/AIDS",
     "date": 1497093051529,
     "views": 0,
-    "description": "HIV/AIDS"
+    "description": "HIV/AIDS",
+    "source": "OpenNepal"
     }
 }
 ```
@@ -91,7 +92,8 @@ https://eng100d-project.herokuapp.com/info/{type of affliction}/{affliction}
   "name": "HIV/AIDS",
   "date": 1497093051529,
   "views": 0,
-  "description": "HIV/AIDS"
+  "description": "HIV/AIDS",
+  "source": "OpenNepal"
 }
 ```
 
@@ -183,7 +185,8 @@ var n=d.getTime();
   "name":"NAME",
   "date":"DATE",
   "views":"NUMBER_OF_VIEWS",
-  "description":"SOME_DESCRIPTION"
+  "description":"SOME_DESCRIPTION",
+  "source": "SOME_SOURCE"
 }
 ```
 
