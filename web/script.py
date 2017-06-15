@@ -246,7 +246,7 @@ def nutrition_indicators(d1, d2):
     headers              = weight_frame.columns.values
     weight_frame.columns = ["0", "1", "2", "Latitude", "Longitude"]
     
-    weight_map = { key : {"cols": list(headers), "rows": weight_frame.to_json(orient="records")} }
+    weight_map = { key : {"Data" : {"cols": list(headers), "rows": weight_frame.to_json(orient="records")} }}
     
     return weight_map
 
@@ -259,6 +259,7 @@ nutrition_list              = [nutrition_indicators(d,y) for d in nutrition_fram
 nutrition_dict = {}
 convert_list_to_dict(nutrition_dict, nutrition_list)
 nutrition_dict
+
 
 
 # In[101]:
@@ -282,7 +283,7 @@ def water_indicators(dictionary):
     headers       = frame.columns.values
     frame.columns = ["0", "1", "Latitude", "Longitude"]
     
-    return {key : {"cols": list(headers) ,"rows":frame.to_json(orient="records")} }
+    return {key : {"Data": {"cols": list(headers) ,"rows":frame.to_json(orient="records")} }}
 
 df_water[["Name", "Indicator"]].apply(lambda x: region_lat_long_sort(x), axis=1)
 water_frames           = df_water.groupby("Indicator")
