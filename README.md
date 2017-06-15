@@ -24,7 +24,8 @@ https://eng100d-project.herokuapp.com/list/all
       "date": 1497093051529,
       "views": 0,
       "description": "ARI/Lower respiratory tract Infection",
-      "source": "OpenNepal"
+      "source": "OpenNepal",
+      "uploader": "Original"
     },
     {
       "type": "disease",
@@ -33,7 +34,7 @@ https://eng100d-project.herokuapp.com/list/all
       "date": 1497093051529,
       "views": 0,
       "description": "Asthama",
-      "source": "OpenNepal"
+      "source": "Original"
     },...
   ]
 ```
