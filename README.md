@@ -80,7 +80,8 @@ NOTE: Replace "/" with %2F
     "date": 1497093051529,
     "views": 0,
     "description": "HIV/AIDS",
-    "source": "OpenNepal"
+    "source": "OpenNepal",
+    "uploader": "Uploader"
     }
 }
 ```
@@ -91,11 +92,12 @@ https://eng100d-project.herokuapp.com/info/{type of affliction}/{affliction}
 >>
 ```
 {
-  "name": "HIV/AIDS",
-  "date": 1497093051529,
-  "views": 0,
-  "description": "HIV/AIDS",
-  "source": "OpenNepal"
+    "name": "HIV/AIDS",
+    "date": 1497503262232,
+    "views": 0,
+    "description": "HIV/AIDS",
+    "source": "OpenNepal",
+    "uploader": "Original"
 }
 ```
 
@@ -188,7 +190,8 @@ var n=d.getTime();
   "date":"DATE",
   "views":"NUMBER_OF_VIEWS",
   "description":"SOME_DESCRIPTION",
-  "source": "SOME_SOURCE"
+  "source": "SOME_SOURCE",
+  "uploader":"SOME_UPLOADER"
 }
 ```
 
@@ -213,6 +216,40 @@ https://eng100d-project.herokuapp.com/add/row/{type of affliction}/{affliction}
   "Longitude":"LONGITUDE_OF_DISTRICT"
 }
 ```
+edit Data field
+https://eng100d-project.herokuapp.com/edit/data/affliction/{type of affliction}
+>> Send JSON in this format:
+```
+{
+  info:{
+    "name":"X",
+    "date":Y,
+    "views":Z,
+    "description":"new description",
+    "source":"source"
+  },
+  Data:{
+    cols:[col1,col2,col3...],
+    rows:[
+      {
+        "0":Name,
+        "1":Year,
+        "2":Value,
+        "Latitude":Lat,
+        "Longitude":Long
+      },
+      {
+        "0":Name,
+        "1":Year,
+        "2":Value,
+        "Latitude":Lat,
+        "Longitude":Long
+      },
+      ...
+    ]
+  }
+}
+```
 Add a new affliction
 https://eng100d-project.herokuapp.com/add/affliction/{type of affliction}
 >> Send JSON in this format:
@@ -222,4 +259,10 @@ https://eng100d-project.herokuapp.com/add/affliction/{type of affliction}
     "name":"NAME_OF_AFFLICTION",
     "description": "DESCRIPTION_OF_AFFLICTION"
 }
+```
+Delete Aflliction
+https://eng100d-project.herokuapp.com/delete/affliction/{type of affliction}
+>> Send JSON in this format:
+```
+{}
 ```
