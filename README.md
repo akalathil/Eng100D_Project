@@ -227,7 +227,8 @@ https://eng100d-project.herokuapp.com/edit/data/affliction/{type of affliction}
     "date":Y,
     "views":Z,
     "description":"new description",
-    "source":"source"
+    "source":"source",
+    "uploader":"SOME_UPLOADER"
   },
   Data:{
     cols:[col1,col2,col3...],
