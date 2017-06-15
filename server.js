@@ -30,9 +30,13 @@ app.get('/data/:type/:affliction/cols',api.getDataCols);
 app.post('/edit/cols/:type/:affliction',api.editCols);
 app.post('/edit/rows/:type/:affliction',api.editRows);
 app.post('/edit/info/:type/:affliction',api.editInfo);
+app.post('/edit/data/:type/:affliction',api.editData);
+
 app.post('/edit/type/:type/:affliction',api.changeType);
 app.post('/add/row/:type/:affliction', api.addRow);
 app.post('/add/affliction/:type',api.addAffliction);
+
+app.post('/delete/:type/:affliction', api.deleteAffliction);
 
 
 app.listen(port);
