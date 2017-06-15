@@ -218,7 +218,7 @@ https://eng100d-project.herokuapp.com/add/row/{type of affliction}/{affliction}
 }
 ```
 edit Data field
-https://eng100d-project.herokuapp.com/edit/data/affliction/{type of affliction}
+https://eng100d-project.herokuapp.com/edit/data{type of affliction}/{affliction}
 >> Send JSON in this format:
 ```
 {
